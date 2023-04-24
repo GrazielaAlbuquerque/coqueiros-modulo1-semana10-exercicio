@@ -7,6 +7,7 @@ namespace Semana10.DTO
 {
     public class MarcaGetDTO
     {
-        
+    public int Codigo { get; set; }
+    public string Nome { get; set; }
     }
 }

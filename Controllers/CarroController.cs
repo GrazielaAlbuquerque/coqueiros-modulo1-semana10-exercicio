@@ -1,20 +1,16 @@
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Semana10.Model;
 using Semana10.DTO;
+using Microsoft.AspNetCore.Mvc;
+using Model;
 
-namespace Semana10.Controllers
+namespace Controllers
 {
-    [Route("[controller]")]
-    public class CarroController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class CarroController : ControllerBase
     {
-        private readonly LocacaoContext locacaoContext1;
-        private LocacaoContext locacaoContext;
+        private readonly LocacaoContext locacaoContext;
 
         public CarroController (LocacaoContext locacaoContext)
         {
@@ -22,23 +18,18 @@ namespace Semana10.Controllers
         }
 
     [HttpPost]
-    public ActionResult<CarroCreateDTO> Post ([FromBody] CarroCreateDTO carroDTO)
+    public ActionResult<CarroCreateDTO> Post([FromBody] CarroCreateDTO carroDTO)
     {
-        //instanciando a model
-        //passar meus parametros
         CarroModel carroModel = new CarroModel ();
         carroModel.DataLocacao = carroDTO.DataLocacao;
         carroModel.Nome = carroDTO.Nome;
         carroModel.MarcaId = carroDTO.MarcaId;
 
-        //fazer validação (verificar se existe a marca no BD)
-        var marcaModel = locacaoContext.marca.Find(carroDTO.MarcaId);
+        var marcaModel = locacaoContext.Marca.Find(carroDTO.MarcaId);
         if(marcaModel != null)
         {
-            //add no DBset
-            locacaoContext.carro.Add(carroModel);
+            locacaoContext.Carro.Add(carroModel);
 
-             //salvar
             locacaoContext.SaveChanges();
 
             carroDTO.Id = carroModel.Id;
@@ -46,18 +37,15 @@ namespace Semana10.Controllers
         }
         else
         {
-            return BadRequest ("erro ao salvar o carro no Banco de Dados");
+            return BadRequest ("Ocorreu um erro ao inserir o carro no Banco de Dados.");
         }
     }
 
     [HttpPut]
     public ActionResult Put([FromBody] CarroUpDateDTO carroUpDateDTO)
     {
-       //carro id tem que ter cadastro
-       //codigo marca não pode ser nulo
-       //marcaid não tem que estar cadastrado
-        CarroModel carroModel = locacaoContext.carro.Find(carroUpDateDTO.Id);
-        MarcaModel marcaModel = locacaoContext.marca.Find(carroUpDateDTO.CodigoMarca);
+        CarroModel carroModel = locacaoContext.Carro.Find(carroUpDateDTO.Id);
+        MarcaModel marcaModel = locacaoContext.Marca.Find(carroUpDateDTO.CodigoMarca);
 
         if (marcaModel == null)
         {
@@ -83,7 +71,7 @@ namespace Semana10.Controllers
     [Route("{id}")]
     public ActionResult Delete([FromRoute] int id)
     {
-        CarroModel carroModel = locacaoContext.carro.Find(id);
+        CarroModel carroModel = locacaoContext.Carro.Find(id);
 
         if (carroModel != null)
         {
@@ -99,9 +87,8 @@ namespace Semana10.Controllers
     [HttpGet]
     public ActionResult<List<CarroGetDTO>> Get()
     {
-       var ListCarroModel = locacaoContext.carro;
-            //inst
-            //tipo de obj devolvido (lista), preciso percorrer a model
+       var ListCarroModel = locacaoContext.Carro;
+
             List<CarroGetDTO> listaGetDTO = new List<CarroGetDTO>();
 
             foreach (var item in ListCarroModel)
@@ -118,16 +105,13 @@ namespace Semana10.Controllers
      [HttpGet("{id}")]
         public ActionResult<CarroGetDTO> Get([FromRoute] int id)
         {
-            //Buscar o registro no BD por Id
-            //var carroModel = locacaoContext.carro.Find(id);
-            var carroModel = locacaoContext.carro.Where(w => w.Id == id).FirstOrDefault();
+            var carroModel = locacaoContext.Carro.Where(w => w.Id == id).FirstOrDefault();
 
             if (carroModel == null)
             {
                 return BadRequest("Dados não encontrados no BD");
             }
 
-            //Modificar de carroModel para carroGetDTO
             CarroGetDTO carroGetDTO = new CarroGetDTO();
             carroGetDTO.Id = carroModel.Id;
             carroGetDTO.Nome = carroModel.Nome;

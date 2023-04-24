@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 
-
-namespace Semana10.Model
+namespace Model
 
 {
     [Table("Carros")]
@@ -19,7 +17,7 @@ namespace Semana10.Model
         public string Nome { get; set; }
         [Column("DataLocacao")]
         public DateTime DataLocacao { get; set; }
-
+        [Column("IdMarca")]
         [ForeignKey("MarcaModel")]
         public int MarcaId {get; set;}
         public MarcaModel Marca { get; set; }

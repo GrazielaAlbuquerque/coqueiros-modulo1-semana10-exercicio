@@ -7,6 +7,9 @@ namespace Semana10.DTO
 {
     public class CarroGetDTO
     {
-        
+        public int Id { get; set; }
+        public string Nome { get; set; }
+        public DateTime DataLocacao { get; set; }
+        public int MarcaId {get; set;} 
     }
 }

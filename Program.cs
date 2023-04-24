@@ -1,10 +1,8 @@
-using System;
-using Semana10.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Model;
 using Microsoft.Extensions.Hosting;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,14 +13,14 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-string connectionString = "Server=DESKTOP-KRET77R;Database=Carro;Trusted_Connection=True;TrustServerCertificate=True;";
+string connectionString = "Server=DESKTOP-KRET77R\\SQLEXPRESS;Database=Semana;Trusted_Connection=True;TrustServerCertificate=True;";
 builder.Services.AddDbContext<LocacaoContext>(o => o.UseSqlServer(connectionString));
 
+builder.Services.AddDbContext<LocacaoContext>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
-
+// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

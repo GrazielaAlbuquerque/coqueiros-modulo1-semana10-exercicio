@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,7 @@ namespace Semana10.DTO
 {
     public class MarcaUpDateDTO
     {
-        
+      public int Codigo { get; set; }
+      public string Nome { get; set; }
     }
 }
